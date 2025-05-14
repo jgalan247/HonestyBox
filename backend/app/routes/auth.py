@@ -45,6 +45,6 @@ def login():
     if not user.confirmed:
         return jsonify({"msg": "Account not yet confirmed"}), 403
 
-    access_token = create_access_token(identity={'id': user.id, 'role': user.role})
+    access_token = create_access_token(identity=str(user.id))
     return jsonify(access_token=access_token), 200
 
