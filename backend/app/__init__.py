@@ -5,6 +5,8 @@ from .routes.auth import auth_bp
 from .routes.farmer import farmer_bp
 from .routes.admin import admin_bp
 from .html_routes import html_bp
+from flask_cors import CORS
+from .routes.public import public_bp
 
 def create_app():
     app = Flask(__name__)
@@ -18,6 +20,9 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_SECRET_KEY'] = 'another-secret-key'
 
+    # CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+    CORS(app, supports_credentials=True, origins=["http://localhost:5173"], resources={r"/api/*": {"origins": "http://localhost:5173"}})
+
     # Init extensions
     db.init_app(app)
     jwt.init_app(app)
@@ -27,7 +32,8 @@ def create_app():
     app.register_blueprint(farmer_bp, url_prefix='/api/farmer')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(html_bp)
-
+    app.register_blueprint(public_bp)
+    
     print("🧠 Using DB:", app.config['SQLALCHEMY_DATABASE_URI'])  # Optional
 
     return app

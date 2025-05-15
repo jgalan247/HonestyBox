@@ -18,7 +18,14 @@ CREATE TABLE product (
     description TEXT,
     price TEXT,
     available TEXT,
-    location_id INTEGER,
+    owner_id INTEGER REFERENCES user(id)
+);
+
+CREATE TABLE location (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    label TEXT,
+    lat TEXT,
+    lon TEXT,
     owner_id INTEGER REFERENCES user(id)
 );
 

@@ -39,9 +39,29 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
+    print(f"🔐 Login attempt for: {username} with password: {password}")
+
     user = User.query.filter_by(username=username).first()
-    if not user or not argon2.verify(password, user.password_h):
-        return jsonify({"msg": "Invalid username or password"}), 401
+    if not user:
+    	print("🧩 Login failed: user not found")
+    	return jsonify({"msg": "Invalid username or password"}), 401
+
+    print("🔐 Stored hash:", user.password_h)
+
+    try:
+    	if not argon2.verify(password, user.password_h):
+        	print("🧩 Login failed: password mismatch")
+        	return jsonify({"msg": "Invalid username or password"}), 401
+    except Exception as e:
+    	print("💥 Error during password verification:", e)
+    	return jsonify({"msg": "Password verification error"}), 500
+
+    if not user.confirmed:
+    	print("⏳ Login blocked: user not confirmed")
+    	return jsonify({"msg": "Account not yet confirmed"}), 403
+
+    print("✅ Login success for:", username)
+
     if not user.confirmed:
         return jsonify({"msg": "Account not yet confirmed"}), 403
 

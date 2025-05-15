@@ -6,7 +6,8 @@ import ProductListView from '../views/ProductListView.vue'
 const routes = [
   { path: '/login', component: LoginView },
   { path: '/signup', component: SignupView },
-  { path: '/products', component: ProductListView }
+  { path: '/products', component: ProductListView },
+  { path: '/', redirect: '/products' } 
 ]
 
 export default createRouter({
