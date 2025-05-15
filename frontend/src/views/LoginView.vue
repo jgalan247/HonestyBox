@@ -1,12 +1,21 @@
 <template>
-  <div class="p-4 max-w-md mx-auto">
-    <h2 class="text-xl font-bold mb-2">Login</h2>
-    <form @submit.prevent="handleLogin">
-      <input v-model="username" placeholder="Username" class="input" />
-      <input v-model="password" type="password" placeholder="Password" class="input mt-2" />
-      <button class="btn mt-4">Login</button>
-    </form>
-    <p class="text-red-500 mt-2" v-if="auth.error">{{ auth.error }}</p>
+  <div class="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+      <h1 class="text-2xl font-bold mb-4 text-green-700 text-center">🔐 Login</h1>
+
+      <form @submit.prevent="handleLogin" class="space-y-3">
+        <input v-model="username" type="text" placeholder="Username" class="input" required />
+        <input v-model="password" type="password" placeholder="Password" class="input" required />
+        <button type="submit" class="btn w-full">Login</button>
+      </form>
+
+      <p class="text-red-600 text-sm mt-3 text-center" v-if="auth.error">{{ auth.error }}</p>
+
+      <p class="text-center text-sm text-gray-600 mt-4">
+        Don’t have an account?
+        <router-link to="/signup" class="text-green-700 font-semibold hover:underline">Sign up</router-link>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -25,4 +34,13 @@ const handleLogin = async () => {
   if (auth.token) router.push('/products')
 }
 </script>
+
+<style scoped>
+.input {
+  @apply w-full p-2 border border-gray-300 rounded;
+}
+.btn {
+  @apply px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700;
+}
+</style>
 
