@@ -5,6 +5,7 @@ import router from './router'
 import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import './style.css'
 
 // Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl

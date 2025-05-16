@@ -1,46 +1,65 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-    <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold mb-4 text-green-700 text-center">🔐 Login</h1>
+  <BaseLayout>
+    <div class="flex justify-center items-center min-h-[70vh]">
+      <div class="w-full max-w-md bg-white p-6 rounded shadow-md">
+        <h1 class="text-2xl font-bold text-center text-green-800 mb-6">🔐 Login</h1>
 
-      <form @submit.prevent="handleLogin" class="space-y-3">
-        <input v-model="username" type="text" placeholder="Username" class="input" required />
-        <input v-model="password" type="password" placeholder="Password" class="input" required />
-        <button type="submit" class="btn w-full">Login</button>
-      </form>
+        <form @submit.prevent="handleLogin" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              v-model="email"
+              type="email"
+              required
+              class="mt-1 block w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+            />
+          </div>
 
-      <p class="text-red-600 text-sm mt-3 text-center" v-if="auth.error">{{ auth.error }}</p>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              v-model="password"
+              type="password"
+              required
+              class="mt-1 block w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+            />
+          </div>
 
-      <p class="text-center text-sm text-gray-600 mt-4">
-        Don’t have an account?
-        <router-link to="/signup" class="text-green-700 font-semibold hover:underline">Sign up</router-link>
-      </p>
+          <button
+            type="submit"
+            class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+          >
+            Log In
+          </button>
+        </form>
+
+        <p class="text-sm text-center mt-4">
+          Not registered yet?
+          <RouterLink to="/signup" class="text-green-700 hover:underline">Sign up here</RouterLink>.
+        </p>
+      </div>
     </div>
-  </div>
+  </BaseLayout>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useAuthStore } from '../stores/authStore'
+import BaseLayout from '@/components/BaseLayout.vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
-const username = ref('')
+const email = ref('')
 const password = ref('')
-const auth = useAuthStore()
 const router = useRouter()
+const authStore = useAuthStore()
 
-const handleLogin = async () => {
-  await auth.login(username.value, password.value)
-  if (auth.token) router.push('/products')
+async function handleLogin() {
+  try {
+    await authStore.login(email.value, password.value)
+    router.push('/')  // or redirect to dashboard
+  } catch (err) {
+    alert('Login failed. Please check your credentials.')
+  }
 }
 </script>
-
-<style scoped>
-.input {
-  @apply w-full p-2 border border-gray-300 rounded;
-}
-.btn {
-  @apply px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700;
-}
-</style>
 
